@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Transactions - Finance Dashboard</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/transactions.css" />
+</head>
+
+<body>
+
+
+  <header class="mobile-nav">
+    <button id="hamburgerBtn" class="hamburger-btn">☰</button>
+    <h2>Finance</h2>
+  </header>
+
+
+  <div id="overlay" class="overlay hidden"></div>
+
+
+  <div class="container">
+
+  
+    <aside class="sidebar">
+      <div class="logo"><h1>Finance</h1></div>
+
+      <nav class="nav-menu">
+        <button class="nav-btn" onclick="window.location.href='/Dashboard.html'">Dashboard</button>
+        <button class="nav-btn active">Transactions</button>
+        <button class="nav-btn" onclick="window.location.href='/analytics.html'">Analytics</button>
+        <button class="nav-btn" onclick="window.location.href='/settings.html'">Settings</button>
+      </nav>
+
+      <button id="signOutBtn" class="signout-btn">Sign Out</button>
+    </aside>
+
+
+    <main class="main-content">
+      <section class="transactions-section">
+
+        <h2>Transactions</h2>
+        <p class="subtitle">View and manage your transactions</p>
+
+        <!-- CONTROLS -->
+        <div class="transactions-controls">
+          <input type="search" id="searchInput" placeholder="Search transactions..." />
+
+          <select id="categoryFilter">
+            <option value="all">All Categories</option>
+            <option value="salary">Salary</option>
+            <option value="freelance">Freelance</option>
+            <option value="food">Food</option>
+            <option value="transport">Transport</option>
+            <option value="utilities">Utilities</option>
+            <option value="entertainment">Entertainment</option>
+          </select>
+
+          <button id="addTransactionBtn" class="primary-btn" type="button">
+            + Add Transaction
+          </button>
+        </div>
+
+        <!-- TRANSACTION LIST -->
+        <ul id="transactionList" class="transaction-list"></ul>
+
+      </section>
+    </main>
+  </div>
+
+  <!-- ============================================================
+       ADD / EDIT TRANSACTION MODAL
+  ============================================================ -->
+  <div id="transactionModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <button class="modal-close" id="closeModalBtn">×</button>
+
+      <h3>Add Transaction</h3>
+      <p class="modal-subtitle">Record a new income or expense transaction</p>
+
+      <!-- Toggle Buttons -->
+      <div class="type-toggle">
+        <button id="expenseTab" class="toggle-btn active">Expense</button>
+        <button id="incomeTab" class="toggle-btn">Income</button>
+      </div>
+
+      <!-- Transaction Form -->
+      <form id="transactionForm">
+
+        <label>
+          Amount *
+          <input type="number" id="amountInput" placeholder="$ 0.00" step="0.01" required />
+        </label>
+
+        <label>
+          Category *
+          <select id="categoryInput" required>
+            <option value="salary">Salary</option>
+            <option value="freelance">Freelance</option>
+            <option value="food">Food</option>
+            <option value="transport">Transport</option>
+            <option value="utilities">Utilities</option>
+            <option value="entertainment">Entertainment</option>
+          </select>
+        </label>
+
+        <label>
+          Date *
+          <input type="date" id="dateInput" required />
+        </label>
+
+        <label>
+          Description *
+          <input
+            type="text"
+            id="descriptionInput"
+            placeholder="E.g., Grocery shopping, Monthly rent..."
+            required
+          />
+        </label>
+
+        <label class="receipt-upload">
+          Receipt (Optional)
+          <div class="upload-box">
+            <input type="file" id="receiptInput" hidden />
+            <button type="button" id="uploadBtn">Click to upload receipt image</button>
+          </div>
+        </label>
+
+        <!-- Modal Footer -->
+        <div class="modal-actions">
+          <button type="button" id="cancelBtn" class="cancel-btn">Cancel</button>
+          <button type="submit" class="primary-btn">Save Transaction</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script type="module" src="/js/transactions.js"></script>
+
+</body>
+</html>

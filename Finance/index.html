@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Tracker - Manage Your Money</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- RIGHT SECTION -->
+        <div class="right-section">
+            <div class="form-container">
+
+                <!-- MESSAGE BOX (NEW) -->
+                <div id="messageBox" class="message-box hidden"></div>
+
+                <!-- Mobile Icon -->
+                <div class="mobile-icon">
+                    <img src="/image/money.png" alt="Trend Icon" class="trend-icon">
+                </div>
+
+                <h2 class="mobile-title">PERSNAL FINANCE</h2>
+
+                <!-- Tabs -->
+                <div class="tabs">
+                    <button class="tab active" id="signinTab">Sign In</button>
+                    <button class="tab" id="createTab">Create Account</button>
+                </div>
+
+                <!-- SIGNUP FORM -->
+                <form id="signupForm" class="hidden">
+
+                    <!-- Full Name -->
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <input type="text" id="fullName" placeholder=" " required>
+                            <label for="fullName">Full Name</label>
+                            <img src="/image/person.png" alt="User Icon" class="input-icon">
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <input type="email" id="email" placeholder=" " required>
+                            <label for="email">Email</label>
+                            <img src="/image/email.png" alt="Email Icon" class="input-icon">
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <input type="password" id="password" placeholder=" " required>
+                            <label for="password">Password</label>
+                            <img src="/image/lock.png" alt="Lock Icon" class="input-icon">
+                        </div>
+                        <p class="help-text">
+                            Password must be at least 8 characters long.
+                        </p>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Create Account</button>
+
+                    <p class="terms">
+                        By signing up, you agree to our 
+                        <a href="#">Terms of Service</a> and 
+                        <a href="#">Privacy Policy</a>
+                    </p>
+                </form>
+
+                <!-- SIGNIN FORM -->
+                <form id="signinForm" class="active">
+
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <input type="email" id="loginEmail" placeholder=" " required>
+                            <label for="loginEmail">Email</label>
+                            <img src="/image/email.png" alt="Email Icon" class="input-icon">
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <input type="password" id="loginPassword" placeholder=" " required>
+                            <label for="loginPassword">Password</label>
+                            <img src="/image/lock.png" alt="Lock Icon" class="input-icon">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Sign In</button>
+
+                    <p class="divider">Or continue with</p>
+
+                    <button type="button" class="google-btn">
+                        <img src="/image/google.png" alt="Google">
+                        Login with Google
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/script.js"></script>
+    <script type="module" src="/js/firebase-init.js"></script>
+    <script type="module" src="/js/auth.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Analytics - Finance Dashboard</title>
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/analytics.css" />
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+  <!-- MOBILE NAV -->
+  <header class="mobile-nav">
+    <button id="hamburgerBtn" class="hamburger-btn">☰</button>
+    <h2>Finance</h2>
+  </header>
+
+  <!-- Overlay for mobile -->
+  <div id="overlay" class="overlay"></div>
+
+  <div class="container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo"><h1>Finance</h1></div>
+
+      <nav class="nav-menu">
+        <button class="nav-btn" onclick="window.location.href='/Dashboard.html'">Dashboard</button>
+        <button class="nav-btn" onclick="window.location.href='/Transaction.html'">Transactions</button>
+        <button class="nav-btn active">Analytics</button>
+        <button class="nav-btn" onclick="window.location.href='/settings.html'">Settings</button>
+      </nav>
+
+      <button id="signOutBtn" class="signout-btn">Sign Out</button>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content analytics-page">
+
+      <h2>Analytics</h2>
+      <p class="subtitle">Visualize your spending patterns and financial insights</p>
+
+      <!-- TOP CARDS -->
+      <div class="top-cards">
+        <div class="card">
+          <p>Top Category</p>
+          <h3 id="topCategory">$0.00</h3>
+        </div>
+
+        <div class="card">
+          <p>Total Income (YTD)</p>
+          <h3 id="totalIncome">$0.00</h3>
+        </div>
+
+        <div class="card">
+          <p>Total Expense (YTD)</p>
+          <h3 id="totalExpense">$0.00</h3>
+        </div>
+      </div>
+
+      <!-- GRAPHS -->
+      <div class="charts-row">
+
+        <div class="chart-card">
+          <h3>Income vs Expense</h3>
+          <canvas id="incomeExpenseChart"></canvas>
+        </div>
+
+        <div class="chart-card">
+          <h3>Spending by Category</h3>
+          <canvas id="categoryChart"></canvas>
+        </div>
+
+      </div>
+
+      <!-- SUMMARY -->
+      <div class="summary-card">
+        <h3>Summary</h3>
+
+        <div class="summary-grid">
+          <div>
+            <p>Savings Rate</p>
+            <h2 id="savingsRate">0%</h2>
+          </div>
+
+          <div>
+            <p>Average Monthly Expense</p>
+            <h2 id="avgExpense">$0.00</h2>
+          </div>
+
+          <div>
+            <p>Average Monthly Income</p>
+            <h2 id="avgIncome">$0.00</h2>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- JS -->
+  <script type="module" src="/js/analytics.js"></script>
+
+  <!-- HAMBURGER JS -->
+  <script>
+    const sidebar = document.querySelector(".sidebar");
+    const overlay = document.getElementById("overlay");
+    const hamburger = document.getElementById("hamburgerBtn");
+
+    hamburger.addEventListener("click", () => {
+      sidebar.classList.toggle("active");
+      overlay.classList.toggle("active");
+    });
+
+    overlay.addEventListener("click", () => {
+      sidebar.classList.remove("active");
+      overlay.classList.remove("active");
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Finance Dashboard</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/dashboard.css" />
+</head>
+<body>
+
+  <!-- MOBILE MENU BUTTON -->
+  <button class="mobile-menu-btn"
+          onclick="document.querySelector('.sidebar').classList.toggle('open')">
+    ☰
+  </button>
+
+  <div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" role="navigation" aria-label="Sidebar menu">
+      <div class="logo">
+        <h1>Finance</h1>
+      </div>
+
+      <nav class="nav-menu" role="menu" aria-label="Primary">
+        <button class="nav-btn active" role="menuitem"
+                onclick="window.location.href='/dashboard.html'">Dashboard</button>
+        <button class="nav-btn" role="menuitem"
+                onclick="window.location.href='/Transaction.html'">Transactions</button>
+        <button class="nav-btn" role="menuitem"
+                onclick="window.location.href='/analytics.html'">Analytics</button>
+        <button class="nav-btn" role="menuitem"
+                onclick="window.location.href='/settings.html'">Settings</button>
+      </nav>
+
+      <button class="signout-btn" id="signOutBtn">Sign Out</button>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content" role="main">
+
+      <div class="welcome-user" aria-live="polite">
+        Welcome, <span id="userName">Guest</span>
+      </div>
+
+      <section class="transactions-section">
+        <h2>Recent Transactions</h2>
+        <p class="subtitle">Here are your latest transactions</p>
+
+        <!-- SEARCH & FILTER CONTROLS -->
+        <div class="transactions-controls" style="margin-bottom: 24px;">
+          <input type="text" id="searchInput" placeholder="Search transactions..." aria-label="Search transactions">
+          <select id="categoryFilter" aria-label="Filter by category">
+            <option value="all">All Categories</option>
+            <option value="Food">Food</option>
+            <option value="Salary">Salary</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Utilities">Utilities</option>
+            <option value="Other">Other</option>
+          </select>
+          <select id="sortSelect" aria-label="Sort transactions">
+            <option value="date_desc">Date: Newest First</option>
+            <option value="date_asc">Date: Oldest First</option>
+            <option value="amount_desc">Amount: High to Low</option>
+            <option value="amount_asc">Amount: Low to High</option>
+            <option value="type">Type: Income/Expense</option>
+          </select>
+        </div>
+
+        <ul id="transactionList"
+            class="transaction-list"
+            aria-live="polite"
+            aria-label="Recent transaction list">
+        </ul>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- JS -->
+  <script type="module">
+    import { auth, db, collection, getDocs } from '/js/firebase-init.js';
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+
+    const userName = document.getElementById('userName');
+    const signOutBtn = document.getElementById('signOutBtn');
+    const transactionList = document.getElementById('transactionList');
+    const searchInput = document.getElementById('searchInput');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const sortSelect = document.getElementById('sortSelect');
+
+    let transactions = []; // store locally for filtering/sorting
+
+    // Auth listener
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        userName.textContent = user.email;
+
+        const transactionsRef = collection(db, "users", user.uid, "transactions");
+        await loadTransactions(transactionsRef);
+      } else {
+        window.location.href = '/index.html';
+      }
+    });
+
+    async function loadTransactions(transactionsRef) {
+      try {
+        const snapshot = await getDocs(transactionsRef);
+        transactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+                                    .sort((a, b) => b.createdAt - a.createdAt);
+
+        renderTransactions(transactions.slice(0, 5)); // show 5 latest initially
+      } catch (error) {
+        console.error("Failed to load transactions:", error);
+        transactionList.innerHTML = `<p class="no-data">Failed to load transactions.</p>`;
+      }
+    }
+
+    function renderTransactions(list) {
+      transactionList.innerHTML = "";
+      if (list.length === 0) {
+        transactionList.innerHTML = `<p class="no-data">No transactions found.</p>`;
+        return;
+      }
+
+      list.forEach(t => {
+        const li = document.createElement("li");
+        li.className = `transaction-item dashboard ${t.type}`;
+        li.innerHTML = `
+          <div class="dashboard-transaction">
+            <span class="dashboard-title">${t.description}</span>
+            <span class="dashboard-date">${t.date}</span>
+            <span class="dashboard-amount ${t.type}">
+              ${t.type === "income" ? "+" : "-"}$${t.amount.toFixed(2)}
+            </span>
+          </div>
+        `;
+        transactionList.appendChild(li);
+      });
+    }
+
+    // FILTER & SORT LOGIC
+    function filterAndSortTransactions() {
+      let filtered = [...transactions];
+
+      const query = searchInput.value.toLowerCase();
+      if (query) {
+        filtered = filtered.filter(t =>
+          t.description.toLowerCase().includes(query) ||
+          (t.category && t.category.toLowerCase().includes(query))
+        );
+      }
+
+      const category = categoryFilter.value;
+      if (category && category !== "all") {
+        filtered = filtered.filter(t => t.category.toLowerCase() === category.toLowerCase());
+      }
+
+      const sortBy = sortSelect.value;
+      if (sortBy === "date_asc") filtered.sort((a,b) => a.createdAt - b.createdAt);
+      else if (sortBy === "date_desc") filtered.sort((a,b) => b.createdAt - a.createdAt);
+      else if (sortBy === "amount_asc") filtered.sort((a,b) => a.amount - b.amount);
+      else if (sortBy === "amount_desc") filtered.sort((a,b) => b.amount - a.amount);
+      else if (sortBy === "type") filtered.sort((a,b) => a.type.localeCompare(b.type));
+
+      renderTransactions(filtered);
+    }
+
+    searchInput.addEventListener("input", filterAndSortTransactions);
+    categoryFilter.addEventListener("change", filterAndSortTransactions);
+    sortSelect.addEventListener("change", filterAndSortTransactions);
+
+    // Sign out
+    signOutBtn.addEventListener('click', async () => {
+      try {
+        await signOut(auth);
+        window.location.href = '/index.html';
+      } catch (error) {
+        console.error('Logout error:', error);
+        alert('Logout failed. Please try again.');
+      }
+    });
+  </script>
+
+</body>
+</html>
